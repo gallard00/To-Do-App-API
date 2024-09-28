@@ -31,4 +31,10 @@ public class TaskMapper {
         taskResponse.setUserResponse(modelMapper.map(task.getUser(), UserResponse.class));
         return taskResponse;
     }
+
+    public Task taskResponseToTask(TaskResponse taskResponse) {
+        Task task = modelMapper.map(taskResponse, Task.class);
+        task.setUser(modelMapper.map(taskResponse, User.class));
+        return task;
+    }
 }

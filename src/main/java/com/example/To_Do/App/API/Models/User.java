@@ -22,7 +22,7 @@ public class User {
     private String userName;
     @Column(name = "password")
     private String password;
-    @ManyToOne
+    @OneToMany
     @JoinColumn(name = "task_id", nullable = false)
     private List<Task> tasks;
 
