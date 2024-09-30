@@ -21,9 +21,8 @@ public class TaskController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> newTask(@RequestBody TaskRequest taskRequest) throws Exception{
-        User user = userService.findUserById(taskRequest.getUserRequest().getId());
-        taskService.newTask(taskRequest, user);
+    public ResponseEntity<?> createTask(@RequestBody TaskRequest taskRequest) throws Exception{
+        taskService.createTask(taskRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

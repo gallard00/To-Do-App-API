@@ -20,19 +20,11 @@ public class TaskService {
     @Autowired
     private ITaskRepository iTaskRepository;
 
-    @Autowired
-    private UserService userService;
 
     //Creamos un nuevo Task
-    public Task newTask (TaskRequest taskRequest, User user)throws Exception{
+    public Task createTask (TaskRequest taskRequest)throws Exception{
         try {
-            Task task = mapToTaskModel(taskRequest);
-
-            task.setComplete(taskRequest.isComplete());
-            task.setDescription(taskRequest.getDescription());
-            task.setUser(user);
-
-            return saveTask(task);
+            return saveTask(mapToTask(taskRequest));
         } catch (Exception e) {
             throw new Exception("Error al crear una Task: " + e.getMessage());
         }
@@ -60,10 +52,11 @@ public class TaskService {
     //Actualizamos la Task (Tarea)
     public TaskResponse updateTask(Long id, TaskRequest taskRequest) throws Exception{
         try {
-            Task task = findTaskById(id);
-            task.setDescription(taskRequest.getDescription());
-            task.setComplete(taskRequest.isComplete());
-            return mapToTaskResponse(saveTask(task));
+            Task existingTask = findTaskById(id);
+            existingTask.setDescription(taskRequest.getDescription());
+            existingTask.setComplete(taskRequest.isComplete());
+            Task updateTask = saveTask(existingTask);
+            return mapToTaskResponse(updateTask);
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Task: " + e.getMessage());
         }
@@ -84,7 +77,7 @@ public class TaskService {
     }
 
     //Utiliza el TaskMapper para pasar de Request a Model el Task
-    private Task mapToTaskModel(TaskRequest taskRequest) {return taskMapper.toTask(taskRequest);}
+    private Task mapToTask(TaskRequest taskRequest) {return taskMapper.toTask(taskRequest);}
 
     //Metodo que guarda el nuevo o actualizado Task
     private Task saveTask(Task task){return iTaskRepository.save(task);}
